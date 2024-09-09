@@ -22,7 +22,7 @@ The Banking Control Panel is an ASP.NET Core Blazor Server application that allo
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/BankingControlPanel.git
+git clone https://github.com/abdulqadir-53/BankingControlPanel.git
 ```
 
 2. Navigate to the project directory:
