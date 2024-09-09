@@ -1,0 +1,41 @@
+﻿@page "/register"
+@inject IUserService UserService
+@using System.ComponentModel.DataAnnotations
+@using BankingControlPanel.Models
+@using BankingControlPanel.Services
+
+<h3>Register</h3>
+
+<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit" FormName="registerForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Email:</label>
+        <InputText @bind-Value="@user.Email" />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <InputText @bind-Value="@user.Password" type="password" />
+        <ValidationMessage For="@(() => user.Password)" />
+    </div>
+    <div>
+        <label>Role:</label>
+        <select @bind="@user.Role">
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
+        </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Register</button>
+</EditForm>
+
+@code {
+    private User user = new User();
+
+    private async Task HandleValidSubmit()
+    {
+        await UserService.RegisterUser(user);
+        // Handle post-registration logic (e.g., redirect)
+    }
+}

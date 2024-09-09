@@ -1,0 +1,68 @@
+﻿@page "/clients"
+@using BankingControlPanel.Models
+@using BankingControlPanel.Services
+@inject IClientService ClientService
+
+<h3>Clients</h3>
+
+<EditForm Model="@filter" FormName="clientForm" OnValidSubmit="@HandleFilterSubmit">
+    <div>
+        <label>Filter by First Name:</label>
+        <InputText @bind-Value="@filter.FirstName" />
+    </div>
+    <button class="btn btn-primary" type="submit">Filter</button>
+</EditForm>
+
+@if (clients != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.Email</td>
+                    <td>@client.FirstName</td>
+                    <td>@client.LastName</td>
+                    <td>
+                        <button @onclick="() => EditClient(client.Id)">Edit</button>
+                        <button @onclick="() => DeleteClient(client.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private FilterModel filter = new FilterModel();
+    private IEnumerable<Client> clients;
+
+    private async Task HandleFilterSubmit()
+    {
+        clients = await ClientService.GetClients(filter.FirstName, 1, 10);
+    }
+
+    private async Task EditClient(int id)
+    {
+        // Navigate to edit client page
+    }
+
+    private async Task DeleteClient(int id)
+    {
+        await ClientService.DeleteClient(id);
+        clients = await ClientService.GetClients(filter.FirstName, 1, 10); // Refresh the list
+    }
+
+    public class FilterModel
+    {
+        public string FirstName { get; set; }
+    }
+}

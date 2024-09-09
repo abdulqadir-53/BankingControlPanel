@@ -1,0 +1,46 @@
+﻿@page "/"
+@inject IUserService UserService
+@using System.ComponentModel.DataAnnotations
+@using BankingControlPanel.Models
+@using BankingControlPanel.Services
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+
+<EditForm Model="@user" OnValidSubmit="@HandleValidSubmitLogin" FormName="loginForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Email:</label>
+        <InputText @bind-Value="@user.Email" />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <InputText @bind-Value="@user.Password" type="password" />
+        <ValidationMessage For="@(() => user.Password)" />
+    </div>
+    <button class="btn btn-primary" type="submit">Login</button>
+</EditForm>
+
+@code {
+    private User user = new User();
+
+    private async Task HandleValidSubmitLogin()
+    {
+        var loggedInUser = await UserService.LoginUser(user.Email, user.Password);
+
+        // Handle post-login logic
+        if (loggedInUser != null)
+        {
+            // Redirect to the Clients page
+            NavigationManager.NavigateTo("/clients");
+        }
+        else
+        {
+            Console.WriteLine("Login failed. Please check your credentials.");
+        }
+        
+    }
+}
